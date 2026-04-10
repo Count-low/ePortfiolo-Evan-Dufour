@@ -17,7 +17,18 @@
             padding-bottom: 80px;
         }
 
-        /* ===== HEADER — fond gris foncé au lieu de noir ===== */
+        /* ===== SCROLL PROGRESS BAR ===== */
+        #progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            width: 0%;
+            height: 2px;
+            background: #0071e3;
+            z-index: 9999;
+            transition: width 0.1s linear;
+        }
+
+        /* ===== HEADER ===== */
         header {
             background: #2c2c2e;
             color: white;
@@ -77,8 +88,8 @@
             gap: 9px;
             transition: opacity .2s, transform .2s;
         }
-        .btn-cv  { background: #0071e3; color: white; }
-        .btn-li  { background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.22); }
+        .btn-cv { background: #0071e3; color: white; }
+        .btn-li { background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.22); }
         .btn:hover { opacity: 0.85; transform: translateY(-2px); }
 
         /* ===== NAVIGATION ===== */
@@ -125,8 +136,22 @@
 
         /* ===== CONTENU ===== */
         .content { max-width: 900px; margin: 50px auto 0; padding: 0 20px; }
-        .panel { display: none; }
-        .panel.show { display: block; }
+
+        /* ===== TRANSITIONS D'ONGLETS ===== */
+        .panel {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+        .panel.show {
+            display: block;
+        }
+        .panel.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .section-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
         .section-sub { color: #86868b; margin-bottom: 28px; font-size: 0.95rem; }
 
@@ -139,6 +164,18 @@
             border: 1px solid rgba(0,0,0,0.06);
             box-shadow: 0 2px 12px rgba(0,0,0,0.04);
         }
+
+        /* ===== FADE IN UP (Intersection Observer) ===== */
+        .card, .travel-card, .travel-summary {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .card.revealed, .travel-card.revealed, .travel-summary.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .badge {
             font-size: 0.72rem;
             font-weight: 700;
@@ -172,7 +209,7 @@
         }
         .card-link:hover { background: #0071e3; color: white; }
 
-        /* ===== BARRES DE NIVEAU CND ===== */
+        /* ===== BARRES CND ===== */
         .skill-level { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
         .skill-level-label { width: 220px; font-size: 0.88rem; font-weight: 600; color: #1d1d1f; flex-shrink: 0; }
         .skill-bar-wrap { flex: 1; background: #e8f1fc; border-radius: 20px; height: 8px; overflow: hidden; }
@@ -183,45 +220,69 @@
             width: 90px; text-align: center; flex-shrink: 0;
         }
         .skill-note {
-            font-size: 0.75rem;
-            color: #86868b;
-            font-style: italic;
-            margin-top: -8px;
-            margin-bottom: 14px;
-            padding-left: 234px;
+            font-size: 0.75rem; color: #86868b; font-style: italic;
+            margin-top: -8px; margin-bottom: 14px; padding-left: 234px;
         }
 
-        /* ===== JAUGES LANGUES ===== */
+        /* ===== LANGUES ===== */
         .lang-section { margin-top: 10px; }
         .lang-row { margin-bottom: 22px; }
         .lang-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
         .lang-name { font-size: 0.95rem; font-weight: 700; color: #1d1d1f; }
         .lang-level { font-size: 0.78rem; font-weight: 600; color: #0071e3; background: #e8f1fc; padding: 3px 10px; border-radius: 12px; }
-        .lang-bar-wrap { background: #f0f0f5; border-radius: 20px; height: 10px; overflow: hidden; position: relative; }
-        .lang-bar-fill { height: 100%; border-radius: 20px; position: relative; }
+        .lang-bar-wrap { background: #f0f0f5; border-radius: 20px; height: 10px; overflow: hidden; }
+        .lang-bar-fill { height: 100%; border-radius: 20px; }
         .lang-bar-fill.fr { background: linear-gradient(90deg, #0071e3, #34aadc); width: 100%; }
         .lang-bar-fill.en { background: linear-gradient(90deg, #5856d6, #af52de); width: 60%; }
         .lang-sub { margin-top: 6px; font-size: 0.78rem; color: #86868b; }
-
-        /* Segments de la barre anglais */
         .lang-segments { display: flex; gap: 6px; margin-top: 10px; }
-        .lang-seg {
-            flex: 1;
-            border-radius: 10px;
-            padding: 6px 10px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-align: center;
-        }
+        .lang-seg { flex: 1; border-radius: 10px; padding: 6px 10px; font-size: 0.75rem; font-weight: 600; text-align: center; }
         .lang-seg.good { background: #e8f8f0; color: #1a7a45; }
         .lang-seg.mid  { background: #fff3e0; color: #b45309; }
-        .lang-seg.low  { background: #fef2f2; color: #b91c1c; }
 
-        /* ===== NORMES ===== */
+        /* ===== TOOLTIPS NORMES ===== */
         .norm-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
         .norm-pill {
             background: #fff3e0; color: #b45309; font-size: 0.8rem;
-            font-weight: 700; padding: 6px 14px; border-radius: 20px; border: 1px solid #fde68a;
+            font-weight: 700; padding: 6px 14px; border-radius: 20px;
+            border: 1px solid #fde68a; cursor: pointer;
+            position: relative; transition: background .2s, color .2s;
+        }
+        .norm-pill:hover { background: #b45309; color: white; }
+        .norm-pill .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            background: #1d1d1f;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 400;
+            line-height: 1.45;
+            padding: 10px 14px;
+            border-radius: 12px;
+            width: 220px;
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 200;
+            pointer-events: none;
+            white-space: normal;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        .norm-pill .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%; left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1d1d1f;
+        }
+        .norm-pill:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
         /* ===== GRILLE SKILLS ===== */
@@ -230,6 +291,19 @@
         .skill-box .icon { font-size: 1.5rem; margin-bottom: 8px; display: block; }
         .skill-box strong { color: #0071e3; font-size: 0.92rem; display: block; margin-bottom: 5px; }
         .skill-box p { font-size: 0.82rem; color: #555; margin: 0; }
+
+        /* ===== EXPERTISE NUMÉRIQUE ===== */
+        .tech-tag {
+            display: inline-block;
+            background: #f0f0f5;
+            color: #444;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 16px;
+            margin: 3px 3px 3px 0;
+        }
+        .tech-tag.highlight { background: #e8f1fc; color: #0071e3; }
 
         /* ===== VOYAGES ===== */
         .travel-summary {
@@ -259,11 +333,7 @@
             box-shadow: 0 2px 12px rgba(0,0,0,0.04);
             margin-bottom: 24px;
         }
-        .travel-header {
-            padding: 28px 34px 22px;
-            position: relative;
-            color: white;
-        }
+        .travel-header { padding: 28px 34px 22px; position: relative; color: white; }
         .travel-header.sansebastien { background: linear-gradient(135deg, #1a3a6e 0%, #0071e3 100%); }
         .travel-header.majorque     { background: linear-gradient(135deg, #0d6b3a 0%, #27ae60 100%); }
         .travel-header.egypte       { background: linear-gradient(135deg, #7a4a00 0%, #e67e22 100%); }
@@ -275,7 +345,6 @@
         }
         .travel-header h3 { font-size: 1.9rem; font-weight: 800; font-family: 'Poppins', sans-serif; line-height: 1.1; margin-bottom: 4px; }
         .travel-header .travel-type { font-size: 0.82rem; opacity: 0.8; margin-top: 6px; display: block; }
-
         .travel-body { padding: 28px 34px 30px; }
         .travel-highlight {
             background: #f7f9fc;
@@ -291,28 +360,148 @@
         .travel-highlight.orange { border-left-color: #e67e22; }
         .travel-highlight.purple { border-left-color: #9b59b6; }
         .travel-body h4 { font-size: 1rem; font-weight: 700; color: #1d1d1f; margin: 20px 0 10px; }
-        .travel-moments {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin-top: 14px;
-        }
-        .moment-box {
-            background: #f7f9fc;
-            border-radius: 14px;
-            padding: 16px;
-            border: 1px solid #e5eaf2;
-        }
+        .travel-moments { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 14px; }
+        .moment-box { background: #f7f9fc; border-radius: 14px; padding: 16px; border: 1px solid #e5eaf2; }
         .moment-box .m-icon { font-size: 1.4rem; margin-bottom: 6px; display: block; }
         .moment-box strong { font-size: 0.88rem; color: #1d1d1f; display: block; margin-bottom: 4px; }
         .moment-box p { font-size: 0.8rem; color: #86868b; margin: 0; }
         .travel-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
-        .travel-tag {
-            font-size: 0.78rem; font-weight: 600;
-            padding: 5px 13px; border-radius: 20px;
-            background: #f2f2f7; color: #444;
+        .travel-tag { font-size: 0.78rem; font-weight: 600; padding: 5px 13px; border-radius: 20px; background: #f2f2f7; color: #444; }
+
+        /* ===== CONTACT ===== */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 600px) { .contact-grid { grid-template-columns: 1fr; } }
+
+        .contact-info-card {
+            background: white;
+            border-radius: 22px;
+            padding: 30px 32px;
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .contact-info-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid #e5eaf2;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all .2s;
+            position: relative;
+            background: #f7f9fc;
+            user-select: none;
+        }
+        .contact-item:hover { background: #e8f1fc; border-color: #0071e3; }
+        .contact-item:hover .contact-copy-hint { opacity: 1; }
+        .contact-item-icon {
+            width: 40px; height: 40px;
+            background: #e8f1fc;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: #0071e3; font-size: 1rem; flex-shrink: 0;
+        }
+        .contact-item-text { flex: 1; min-width: 0; }
+        .contact-item-label { font-size: 0.72rem; font-weight: 700; color: #86868b; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+        .contact-item-value { font-size: 0.92rem; font-weight: 600; color: #1d1d1f; word-break: break-all; }
+        .contact-copy-hint {
+            font-size: 0.7rem; color: #0071e3; font-weight: 600;
+            opacity: 0; transition: opacity .2s; white-space: nowrap;
         }
 
+        /* Notification "Copié !" */
+        .copy-toast {
+            position: fixed;
+            bottom: 30px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #1d1d1f;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 50px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 9998;
+            pointer-events: none;
+        }
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Formulaire de contact */
+        .contact-form-card {
+            background: white;
+            border-radius: 22px;
+            padding: 30px 32px;
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .contact-form-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #86868b;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 8px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 1.5px solid #e5eaf2;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            color: #1d1d1f;
+            background: #f7f9fc;
+            transition: border-color .2s, box-shadow .2s;
+            outline: none;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #0071e3;
+            box-shadow: 0 0 0 3px rgba(0,113,227,0.1);
+            background: white;
+        }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+
+        .form-submit {
+            width: 100%;
+            padding: 14px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity .2s, transform .2s;
+            margin-top: 8px;
+        }
+        .form-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 640px) {
             header { padding: 50px 16px 100px; }
             .header-inner img { width: 200px; height: 260px; }
@@ -325,6 +514,12 @@
     </style>
 </head>
 <body>
+
+<!-- BARRE DE PROGRESSION -->
+<div id="progress-bar"></div>
+
+<!-- TOAST COPIÉ -->
+<div class="copy-toast" id="copyToast">✅ Copié dans le presse-papier !</div>
 
 <header>
     <div class="header-inner">
@@ -352,16 +547,16 @@
         <button onclick="show('pro', this)">🚀 Projets</button>
         <button onclick="show('comp', this)">🛠️ Compétences</button>
         <button onclick="show('voyages', this)">🌍 Voyages</button>
+        <button onclick="show('contact', this)">📩 Contact</button>
     </nav>
 </div>
 
 <div class="content" id="mainContent">
 
     <!-- ====== EXPÉRIENCES ====== -->
-    <div id="exp" class="panel show">
+    <div id="exp" class="panel show visible">
         <h2 class="section-title">Expériences professionnelles</h2>
         <p class="section-sub">Mon parcours en entreprise et mes missions terrain.</p>
-
         <div class="card">
             <span class="badge">2024 — 2026 · Alternance</span>
             <h3>Technicien CND</h3>
@@ -375,7 +570,6 @@
                 <i class="fas fa-external-link-alt"></i> Voir le rapport d'alternance
             </a>
         </div>
-
         <div class="card">
             <span class="badge">2022 — 2023</span>
             <h3>Employé de Commerce</h3>
@@ -391,28 +585,24 @@
     <div id="dip" class="panel">
         <h2 class="section-title">Formation & diplômes</h2>
         <p class="section-sub">Mon parcours académique et mes certifications.</p>
-
         <div class="card">
             <span class="badge">En cours · IUT de Bordeaux</span>
             <h3>BUT Mesures Physiques</h3>
             <p>Spécialité <strong>Matériaux et Contrôles Physico-Chimiques (MCPC)</strong>. Formation en alternance combinant métrologie, instrumentation et contrôles non destructifs.</p>
         </div>
-
         <div class="card">
             <span class="badge">2024 — 2025 · Obtenu</span>
             <h3>DU CND</h3>
             <p>Diplôme Universitaire spécialisé en <strong>Contrôles Non Destructifs</strong>. Maîtrise de l'ensemble des méthodes : <strong>PT (Ressuage), UT (Ultrasons), RT (Radiographie), ET (Courants de Foucault), MT (Magnétoscopie)</strong> et <strong>TT (Thermographie)</strong> — avec une expertise particulièrement développée sur le ressuage (PT), méthode principale exercée en alternance.</p>
-            <a href="https://drive.google.com/file/d/1gAqGM5BlW-x1mRaK-yBoAgHW_-iE26C5/view?usp=sharing" class="card-link" target="_blank" style="margin-top: 18px;">
+            <a href="https://drive.google.com/file/d/1gAqGM5BlW-x1mRaK-yBoAgHW_-iE26C5/view?usp=sharing" class="card-link" target="_blank" style="margin-top:18px;">
                 <i class="fas fa-certificate"></i> Voir l'attestation d'obtention
             </a>
         </div>
-
         <div class="card">
             <span class="badge">2023 · Lycée Belorme</span>
             <h3>BAC STL — SPCL</h3>
             <p>Sciences et Technologies de Laboratoire, option <strong>Sciences Physiques et Chimiques en Laboratoire</strong>.</p>
         </div>
-
         <div class="card">
             <span class="badge">2020 · École Saint-Joseph</span>
             <h3>CAP Coiffure</h3>
@@ -424,7 +614,6 @@
     <div id="pro" class="panel">
         <h2 class="section-title">Projets techniques</h2>
         <p class="section-sub">Études et travaux réalisés dans le cadre de ma formation.</p>
-
         <div class="card">
             <span class="badge">Projet CND · Ultrasons</span>
             <h3>Optimisation du Contrôle par Ultrasons</h3>
@@ -435,7 +624,6 @@
                 <li>Rédaction d'un rapport de synthèse et présentation des résultats.</li>
             </ul>
         </div>
-
         <div class="card">
             <span class="badge">Projet Matériaux</span>
             <h3>Caractérisation Physique &amp; Microstructure</h3>
@@ -453,43 +641,36 @@
         <h2 class="section-title">Compétences</h2>
         <p class="section-sub">Expertise technique acquise en formation et sur le terrain industriel aéronautique et défense.</p>
 
-        <!-- Méthodes CND avec niveaux -->
         <div class="card">
             <span class="badge">Contrôles Non Destructifs · Toutes méthodes DU CND</span>
             <h3>Maîtrise des techniques CND</h3>
-            <p style="margin-bottom: 20px;">Ensemble des méthodes couvertes par le DU CND. La pratique terrain chez JVCoating (pièces aéronautiques &amp; défense) se concentre sur le ressuage — méthode unique appliquée dans l'entreprise.</p>
-
+            <p style="margin-bottom:20px;">Ensemble des méthodes couvertes par le DU CND. La pratique terrain chez JVCoating (pièces aéronautiques &amp; défense) se concentre sur le ressuage — méthode unique appliquée dans l'entreprise.</p>
             <div class="skill-level">
                 <div class="skill-level-label">🔍 PT — Ressuage</div>
                 <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:88%"></div></div>
                 <div class="skill-level-tag">Expert</div>
             </div>
             <div class="skill-note">Examen de qualification PT non encore passé — niveau terrain confirmé en entreprise.</div>
-
             <div class="skill-level">
                 <div class="skill-level-label">📡 UT — Ultrasons</div>
                 <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:65%"></div></div>
                 <div class="skill-level-tag">Avancé</div>
             </div>
-
             <div class="skill-level">
                 <div class="skill-level-label">☢️ RT — Radiographie</div>
                 <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:65%"></div></div>
                 <div class="skill-level-tag">Avancé</div>
             </div>
-
             <div class="skill-level">
                 <div class="skill-level-label">⚡ ET — Courants de Foucault</div>
                 <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:65%"></div></div>
                 <div class="skill-level-tag">Avancé</div>
             </div>
-
             <div class="skill-level">
                 <div class="skill-level-label">🧲 MT — Magnétoscopie</div>
                 <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:65%"></div></div>
                 <div class="skill-level-tag">Avancé</div>
             </div>
-
             <div class="skill-level">
                 <div class="skill-level-label">🌡️ TT — Thermographie</div>
                 <div class="skill-bar-wrap"><div class="skill-bar-fill" style="width:65%"></div></div>
@@ -497,7 +678,6 @@
             </div>
         </div>
 
-        <!-- Ressuage détaillé -->
         <div class="card">
             <span class="badge">Spécialité · Ressuage (PT)</span>
             <h3>Contrôle par Ressuage — Détail opérationnel</h3>
@@ -512,7 +692,6 @@
             </ul>
         </div>
 
-        <!-- Contexte industriel -->
         <div class="card">
             <span class="badge">Contexte Industriel · Aéronautique &amp; Défense</span>
             <h3>Environnement JVCoating</h3>
@@ -524,17 +703,15 @@
                 <li><strong>Rigueur &amp; confidentialité :</strong> respect des habilitations liées aux pièces militaires, conformité aux exigences DGA, Airbus, Dassault, Safran.</li>
             </ul>
             <div class="norm-grid">
-                <span class="norm-pill">EN 4179</span>
-                <span class="norm-pill">NAS 410</span>
-                <span class="norm-pill">EN ISO 3452</span>
-                <span class="norm-pill">Airbus AITM 6-1001</span>
-                <span class="norm-pill">NADCAP</span>
-                <span class="norm-pill">EN 9100</span>
-                <span class="norm-pill">DGQT 1.0.1.0286</span>
+                <span class="norm-pill">EN 4179 / NAS 410<span class="tooltip">Qualification et certification du personnel CND. Définit les exigences de formation, d'expérience et d'examen pour les opérateurs.</span></span>
+                <span class="norm-pill">EN ISO 3452<span class="tooltip">Principes généraux du contrôle par ressuage. Décrit les procédés, matériaux et niveaux de sensibilité applicables.</span></span>
+                <span class="norm-pill">Airbus AITM 6-1001<span class="tooltip">Standard Airbus pour le contrôle par ressuage pénétrant. Spécifie les procédés acceptés pour les pièces aérostructures Airbus.</span></span>
+                <span class="norm-pill">NADCAP<span class="tooltip">Accréditation mondiale pour les procédés spéciaux aéronautiques. Audit indépendant garantissant la conformité des laboratoires CND.</span></span>
+                <span class="norm-pill">EN 9100<span class="tooltip">Système de management de la qualité pour l'aéronautique, l'espace et la défense. Basé sur l'ISO 9001 avec des exigences supplémentaires sectorielles.</span></span>
+                <span class="norm-pill">DGQT 1.0.1.0286<span class="tooltip">Spécification technique qualité propre aux exigences de la Direction Générale de la Qualité pour les procédés de traitement et de contrôle défense.</span></span>
             </div>
         </div>
 
-        <!-- Mesures physiques -->
         <div class="card">
             <span class="badge">Mesures Physiques &amp; Métrologie</span>
             <h3>Instrumentation et analyse</h3>
@@ -548,42 +725,64 @@
             </div>
         </div>
 
-        <!-- Langues -->
+        <!-- EXPERTISE NUMÉRIQUE & IA -->
+        <div class="card">
+            <span class="badge">Numérique &amp; IA</span>
+            <h3>Expertise Numérique &amp; Intelligence Artificielle</h3>
+
+            <div class="skill-box" style="margin-bottom:14px; background:#f0f7ff; border-color:#bfdbfe;">
+                <span class="icon">🤖</span>
+                <strong style="color:#1e40af;">IA &amp; Productivité</strong>
+                <p style="color:#1e3a8a;">Excellente capacité d'adaptation avec toutes les IA génératives. Maîtrise du <strong>Prompt Engineering</strong> pour optimiser les workflows professionnels et académiques — rédaction de rapports, analyse de données, automatisation de tâches répétitives.</p>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <div style="font-size:0.8rem; font-weight:700; color:#86868b; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;">Programmation</div>
+                <div>
+                    <span class="tech-tag highlight">🐍 Python</span>
+                    <span class="tech-tag highlight">🌐 HTML / CSS</span>
+                    <span class="tech-tag highlight">📊 VBA (Excel)</span>
+                </div>
+            </div>
+
+            <div>
+                <div style="font-size:0.8rem; font-weight:700; color:#86868b; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px;">Logiciels &amp; outils</div>
+                <div>
+                    <span class="tech-tag">📁 Suite Office 365</span>
+                    <span class="tech-tag" style="background:#e8f8f0; color:#1a7a45;">📈 Excel — Maîtrise très poussée</span>
+                    <span class="tech-tag">🔧 SolidWorks</span>
+                    <span class="tech-tag">🖥️ FreeCAD</span>
+                </div>
+            </div>
+        </div>
+
         <div class="card">
             <span class="badge">Langues</span>
             <h3>Compétences linguistiques</h3>
-            <div class="lang-section" style="margin-top: 22px;">
-
+            <div class="lang-section" style="margin-top:22px;">
                 <div class="lang-row">
                     <div class="lang-header">
                         <span class="lang-name">🇫🇷 Français</span>
                         <span class="lang-level">Langue natale — C2</span>
                     </div>
-                    <div class="lang-bar-wrap">
-                        <div class="lang-bar-fill fr"></div>
-                    </div>
+                    <div class="lang-bar-wrap"><div class="lang-bar-fill fr"></div></div>
                     <p class="lang-sub">Maîtrise parfaite à l'écrit comme à l'oral. Rédaction de rapports techniques et de documents qualité au quotidien.</p>
                 </div>
-
                 <div class="lang-row">
                     <div class="lang-header">
                         <span class="lang-name">🇬🇧 Anglais</span>
                         <span class="lang-level">Intermédiaire — B1/B2</span>
                     </div>
-                    <div class="lang-bar-wrap">
-                        <div class="lang-bar-fill en"></div>
-                    </div>
+                    <div class="lang-bar-wrap"><div class="lang-bar-fill en"></div></div>
                     <p class="lang-sub">Niveau différencié selon les usages :</p>
                     <div class="lang-segments">
                         <div class="lang-seg good">📖 Lecture<br><span style="font-weight:400; font-size:0.7rem;">Très bon niveau — lecture de normes techniques en anglais</span></div>
                         <div class="lang-seg mid">🗣️ Oral<br><span style="font-weight:400; font-size:0.7rem;">Niveau correct — conversation simple et suivi de discussion</span></div>
                     </div>
                 </div>
-
             </div>
         </div>
 
-        <!-- Savoir-être -->
         <div class="card">
             <span class="badge">Compétences transversales</span>
             <h3>Savoir-être et aptitudes professionnelles</h3>
@@ -612,7 +811,6 @@
             </div>
         </div>
 
-        <!-- ⚽ SAINT-SÉBASTIEN -->
         <div class="travel-card">
             <div class="travel-header sansebastien">
                 <span class="travel-flag-big">🇪🇸</span>
@@ -621,11 +819,9 @@
                 <span class="travel-type">⚽ Tournoi de football · Donosti Cup · S.A.M Mérignac</span>
             </div>
             <div class="travel-body">
-                <div class="travel-highlight">
-                    « Un voyage 100 % football, vécu aux côtés du S.A.M Mérignac — 17 ans de passion sur les terrains, et une compétition internationale pour tout couronner. »
-                </div>
+                <div class="travel-highlight">« Un voyage 100 % football, vécu aux côtés du S.A.M Mérignac — 17 ans de passion sur les terrains, et une compétition internationale pour tout couronner. »</div>
                 <h4>🏆 La Donosti Cup</h4>
-                <p style="color:#555; font-size:0.93rem;">La Donosti Cup est l'un des plus grands tournois de football jeunes en Europe, organisé chaque été à Saint-Sébastien (Donostia). Des centaines d'équipes venues du monde entier se retrouvent sur les pelouses basques dans une ambiance à la fois compétitive et festive. C'est dans ce cadre exceptionnel que j'ai représenté le <strong>S.A.M Mérignac</strong>, mon club de toujours — une expérience qui dépasse largement le simple cadre sportif.</p>
+                <p style="color:#555; font-size:0.93rem;">La Donosti Cup est l'un des plus grands tournois de football jeunes en Europe, organisé chaque été à Saint-Sébastien (Donostia). Des centaines d'équipes venues du monde entier se retrouvent sur les pelouses basques dans une ambiance à la fois compétitive et festive. C'est dans ce cadre exceptionnel que j'ai représenté le <strong>S.A.M Mérignac</strong>, mon club de toujours.</p>
                 <div class="travel-moments">
                     <div class="moment-box"><span class="m-icon">⚽</span><strong>Compétition internationale</strong><p>Affrontement face à des équipes de toute l'Europe dans une atmosphère électrique.</p></div>
                     <div class="moment-box"><span class="m-icon">🏟️</span><strong>Terrains basques</strong><p>Jouer au pied des montagnes du Pays Basque, dans des infrastructures de qualité.</p></div>
@@ -637,12 +833,10 @@
                     <span class="travel-tag">🏆 Donosti Cup</span>
                     <span class="travel-tag">🟡 S.A.M Mérignac</span>
                     <span class="travel-tag">🇪🇸 Pays Basque</span>
-                    <span class="travel-tag">🤝 Esprit d'équipe</span>
                 </div>
             </div>
         </div>
 
-        <!-- 🌊 PALMA DE MAJORQUE -->
         <div class="travel-card">
             <div class="travel-header majorque">
                 <span class="travel-flag-big">🇪🇸</span>
@@ -651,13 +845,11 @@
                 <span class="travel-type">🌊 Premier voyage vacances &amp; tourisme</span>
             </div>
             <div class="travel-body">
-                <div class="travel-highlight green">
-                    « Mon tout premier voyage en mode vacances et tourisme — une découverte totale de ce que peut être le dépaysement sous le soleil méditerranéen. »
-                </div>
+                <div class="travel-highlight green">« Mon tout premier voyage en mode vacances et tourisme — une découverte totale de ce que peut être le dépaysement sous le soleil méditerranéen. »</div>
                 <h4>☀️ Une première fois inoubliable</h4>
-                <p style="color:#555; font-size:0.93rem;">Palma de Majorque a été le théâtre de ma toute première vraie expérience de vacances et de tourisme. Entre les eaux turquoise de la Méditerranée, les plages de sable fin, les ruelles pavées de la vieille ville et la majestueuse cathédrale gothique La Seu qui domine la baie, j'ai découvert ce que signifie vraiment voyager — s'ouvrir à un autre rythme, une autre culture, une autre façon de vivre.</p>
+                <p style="color:#555; font-size:0.93rem;">Palma de Majorque a été le théâtre de ma toute première vraie expérience de vacances et de tourisme. Entre eaux turquoise, plages de sable fin, ruelles pavées et la majestueuse cathédrale La Seu, j'ai découvert ce que signifie vraiment voyager.</p>
                 <div class="travel-moments">
-                    <div class="moment-box"><span class="m-icon">🏖️</span><strong>Plages cristallines</strong><p>Eaux turquoise de la Méditerranée, criques isolées et plages animées — un premier contact saisissant avec la mer.</p></div>
+                    <div class="moment-box"><span class="m-icon">🏖️</span><strong>Plages cristallines</strong><p>Eaux turquoise de la Méditerranée, criques isolées — un premier contact saisissant.</p></div>
                     <div class="moment-box"><span class="m-icon">⛪</span><strong>Cathédrale La Seu</strong><p>Monument gothique monumental qui domine la baie — une architecture à couper le souffle.</p></div>
                     <div class="moment-box"><span class="m-icon">🏛️</span><strong>Vieille ville</strong><p>Ruelles médiévales, palais baroques, marchés locaux et vie espagnole authentique.</p></div>
                     <div class="moment-box"><span class="m-icon">🍽️</span><strong>Gastronomie locale</strong><p>Ensaïmades, tapas, fruits de mer frais — une découverte des saveurs des Baléares.</p></div>
@@ -668,13 +860,11 @@
                     <span class="travel-tag">🌊 Méditerranée</span>
                     <span class="travel-tag">⛪ La Seu</span>
                     <span class="travel-tag">🏖️ Plages</span>
-                    <span class="travel-tag">🏛️ Tourisme culturel</span>
                     <span class="travel-tag">☀️ 1er grand voyage</span>
                 </div>
             </div>
         </div>
 
-        <!-- 🏺 ÉGYPTE -->
         <div class="travel-card">
             <div class="travel-header egypte">
                 <span class="travel-flag-big">🇪🇬</span>
@@ -683,18 +873,16 @@
                 <span class="travel-type">🏺 Vacances &amp; découverte — impossible de rester les bras croisés</span>
             </div>
             <div class="travel-body">
-                <div class="travel-highlight orange">
-                    « Partis pour se reposer… et finalement impossibles de s'arrêter tant l'Égypte déborde de merveilles : îles paradisiaques, désert spectaculaire, peuples fascinants et monuments d'une autre dimension. »
-                </div>
+                <div class="travel-highlight orange">« Partis pour se reposer… et finalement impossibles de s'arrêter tant l'Égypte déborde de merveilles : îles paradisiaques, désert spectaculaire, peuples fascinants et monuments d'une autre dimension. »</div>
                 <h4>🌟 Une civilisation hors du commun</h4>
-                <p style="color:#555; font-size:0.93rem;">L'Égypte est l'un de ces pays qui ne vous laissent pas indifférent. Ce que cette civilisation a su construire — pyramides, sphinx, temples colossaux — dépasse l'entendement humain moderne. Mais au-delà des monuments, c'est l'ensemble du pays qui fascine : ses déserts vivants, ses peuples aux traditions millénaires et ses paysages qui changent radicalement d'une heure à l'autre.</p>
+                <p style="color:#555; font-size:0.93rem;">L'Égypte est l'un de ces pays qui ne vous laissent pas indifférent. Pyramides, sphinx, temples colossaux, déserts vivants et peuples aux traditions millénaires — tout fascine.</p>
                 <div class="travel-moments">
-                    <div class="moment-box"><span class="m-icon">🔺</span><strong>Pyramides de Gizeh</strong><p>Face aux pyramides, on réalise la démesure de cette civilisation — 4 500 ans d'histoire qui vous écrasent de leur grandeur.</p></div>
-                    <div class="moment-box"><span class="m-icon">🗿</span><strong>Le Grand Sphinx</strong><p>Gardien impassible depuis des millénaires — une présence mystérieuse et envoûtante qui marque à vie.</p></div>
-                    <div class="moment-box"><span class="m-icon">🏝️</span><strong>Îles à couper le souffle</strong><p>Eaux cristallines de la mer Rouge, récifs coralliens, plages sauvages — un paradis naturel insoupçonné.</p></div>
-                    <div class="moment-box"><span class="m-icon">🏜️</span><strong>Désert &amp; spectacles bédouins</strong><p>Nuit dans le désert, spectacles des peuples du désert, étoiles sans pollution lumineuse — un moment magique.</p></div>
-                    <div class="moment-box"><span class="m-icon">🛶</span><strong>Le Nil &amp; Louxor</strong><p>Navigation sur le Nil, vallée des Rois, temples pharaoniques — la Haute-Égypte dans toute sa splendeur.</p></div>
-                    <div class="moment-box"><span class="m-icon">🕌</span><strong>Le Caire &amp; ses marchés</strong><p>Souk du Khan el-Khalili, mosquées historiques, immersion totale dans la vie cairote — un choc sensoriel positif.</p></div>
+                    <div class="moment-box"><span class="m-icon">🔺</span><strong>Pyramides de Gizeh</strong><p>4 500 ans d'histoire qui vous écrasent de leur grandeur — un choc visuel absolu.</p></div>
+                    <div class="moment-box"><span class="m-icon">🗿</span><strong>Le Grand Sphinx</strong><p>Gardien impassible depuis des millénaires — une présence mystérieuse et envoûtante.</p></div>
+                    <div class="moment-box"><span class="m-icon">🏝️</span><strong>Îles à couper le souffle</strong><p>Eaux cristallines de la mer Rouge, récifs coralliens, plages sauvages insoupçonnées.</p></div>
+                    <div class="moment-box"><span class="m-icon">🏜️</span><strong>Désert &amp; spectacles bédouins</strong><p>Nuit dans le désert, feux de camp, spectacles des peuples du désert — un moment magique.</p></div>
+                    <div class="moment-box"><span class="m-icon">🛶</span><strong>Le Nil &amp; Louxor</strong><p>Navigation sur le Nil, vallée des Rois, temples pharaoniques.</p></div>
+                    <div class="moment-box"><span class="m-icon">🕌</span><strong>Le Caire &amp; ses marchés</strong><p>Souk du Khan el-Khalili, mosquées historiques — un choc sensoriel positif.</p></div>
                 </div>
                 <div class="travel-tags">
                     <span class="travel-tag">🔺 Pyramides</span>
@@ -702,12 +890,10 @@
                     <span class="travel-tag">🏜️ Désert</span>
                     <span class="travel-tag">🛶 Le Nil</span>
                     <span class="travel-tag">🏺 Antiquité</span>
-                    <span class="travel-tag">🌍 Dépaysement total</span>
                 </div>
             </div>
         </div>
 
-        <!-- 🚣 VENISE -->
         <div class="travel-card">
             <div class="travel-header venise">
                 <span class="travel-flag-big">🇮🇹</span>
@@ -716,18 +902,16 @@
                 <span class="travel-type">🎭 Tourisme pur — épuisant, dépaysant, inoubliable</span>
             </div>
             <div class="travel-body">
-                <div class="travel-highlight purple">
-                    « Peu reposant, mais au combien dépaysant : Murano, Burano, les basiliques, et l'incontournable tour en gondole sous le pont du Rialto — Venise est une œuvre d'art que l'on vit en marchant. »
-                </div>
+                <div class="travel-highlight purple">« Peu reposant, mais au combien dépaysant : Murano, Burano, les basiliques, et l'incontournable tour en gondole sous le pont du Rialto — Venise est une œuvre d'art que l'on vit en marchant. »</div>
                 <h4>🌊 La Sérénissime, ville de l'impossible</h4>
-                <p style="color:#555; font-size:0.93rem;">Venise défie la logique : une ville entière construite sur l'eau, sans voitures, parcourue uniquement à pied et en barque. Chaque rue débouche sur un canal, chaque pont révèle une nouvelle perspective. Ce voyage de tourisme pur m'a emmené dans les recoins les plus secrets de la lagune — et si les jambes accusent le coup, les yeux, eux, n'ont jamais été aussi comblés.</p>
+                <p style="color:#555; font-size:0.93rem;">Une ville entière construite sur l'eau, sans voitures, parcourue à pied et en barque. Ce voyage de tourisme pur m'a emmené dans les recoins les plus secrets de la lagune.</p>
                 <div class="travel-moments">
-                    <div class="moment-box"><span class="m-icon">🚣</span><strong>Tour en gondole</strong><p>Le passage emblématique sous le pont du Rialto en gondole — un moment suspendu dans le temps, l'essence même de Venise.</p></div>
-                    <div class="moment-box"><span class="m-icon">🌉</span><strong>Pont du Rialto</strong><p>Symbole de Venise depuis le XVIe siècle, surplombant le Grand Canal — une vue imprenable sur la ville.</p></div>
-                    <div class="moment-box"><span class="m-icon">🏺</span><strong>Île de Murano</strong><p>Capitale mondiale du verre soufflé : artisans, ateliers, pièces uniques — un savoir-faire ancestral époustouflant.</p></div>
-                    <div class="moment-box"><span class="m-icon">🎨</span><strong>Île de Burano</strong><p>Les maisons aux couleurs vives de Burano, reflets dans les canaux — l'une des images les plus photographiées d'Italie.</p></div>
-                    <div class="moment-box"><span class="m-icon">⛪</span><strong>Les basiliques</strong><p>Saint-Marc et ses mosaïques dorées, Santa Maria della Salute, des trésors architecturaux à chaque carrefour.</p></div>
-                    <div class="moment-box"><span class="m-icon">🗺️</span><strong>Se perdre dans les ruelles</strong><p>Sans GPS, de calle en campo — Venise se révèle à ceux qui acceptent de ne pas savoir où ils vont.</p></div>
+                    <div class="moment-box"><span class="m-icon">🚣</span><strong>Tour en gondole</strong><p>Le passage emblématique sous le pont du Rialto — un moment suspendu dans le temps.</p></div>
+                    <div class="moment-box"><span class="m-icon">🌉</span><strong>Pont du Rialto</strong><p>Symbole de Venise depuis le XVIe siècle, surplombant le Grand Canal.</p></div>
+                    <div class="moment-box"><span class="m-icon">🏺</span><strong>Île de Murano</strong><p>Capitale mondiale du verre soufflé : artisans, ateliers, pièces uniques.</p></div>
+                    <div class="moment-box"><span class="m-icon">🎨</span><strong>Île de Burano</strong><p>Les maisons aux couleurs vives, reflets dans les canaux — l'une des images les plus photographiées d'Italie.</p></div>
+                    <div class="moment-box"><span class="m-icon">⛪</span><strong>Les basiliques</strong><p>Saint-Marc et ses mosaïques dorées, Santa Maria della Salute.</p></div>
+                    <div class="moment-box"><span class="m-icon">🗺️</span><strong>Se perdre dans les ruelles</strong><p>Sans GPS, de calle en campo — Venise se révèle à ceux qui acceptent de se perdre.</p></div>
                 </div>
                 <div class="travel-tags">
                     <span class="travel-tag">🚣 Gondole</span>
@@ -735,30 +919,95 @@
                     <span class="travel-tag">🏺 Murano</span>
                     <span class="travel-tag">🎨 Burano</span>
                     <span class="travel-tag">⛪ Basiliques</span>
-                    <span class="travel-tag">🎭 Tourisme intense</span>
                 </div>
             </div>
         </div>
+    </div>
 
-    </div><!-- fin voyages -->
+    <!-- ====== CONTACT ====== -->
+    <div id="contact" class="panel">
+        <h2 class="section-title">Me contacter</h2>
+        <p class="section-sub">Cliquez sur l'email ou le téléphone pour copier instantanément. Ou envoyez-moi un message directement.</p>
+
+        <div class="contact-grid">
+            <!-- Infos de contact -->
+            <div class="contact-info-card">
+                <h3>📋 Coordonnées</h3>
+
+                <div class="contact-item" onclick="copyToClipboard('evandufour13@icloud.com', this)">
+                    <div class="contact-item-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="contact-item-text">
+                        <div class="contact-item-label">Email</div>
+                        <div class="contact-item-value">evandufour13@icloud.com</div>
+                    </div>
+                    <span class="contact-copy-hint">Cliquer pour copier</span>
+                </div>
+
+                <div class="contact-item" onclick="copyToClipboard('0612723224', this)">
+                    <div class="contact-item-icon"><i class="fas fa-phone"></i></div>
+                    <div class="contact-item-text">
+                        <div class="contact-item-label">Téléphone</div>
+                        <div class="contact-item-value">06 12 72 32 24</div>
+                    </div>
+                    <span class="contact-copy-hint">Cliquer pour copier</span>
+                </div>
+
+                <div style="margin-top:24px; padding-top:20px; border-top:1px solid #f0f0f5;">
+                    <div style="font-size:0.8rem; font-weight:700; color:#86868b; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">Retrouvez-moi aussi sur</div>
+                    <a href="https://www.linkedin.com/in/evan-dufour-3272bb2b3" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:#0a66c2; color:white; text-decoration:none; padding:10px 18px; border-radius:12px; font-size:0.88rem; font-weight:600; transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                        <i class="fab fa-linkedin"></i> LinkedIn
+                    </a>
+                </div>
+            </div>
+
+            <!-- Formulaire -->
+            <div class="contact-form-card">
+                <h3>✉️ Envoyer un message</h3>
+                <div class="form-group">
+                    <label>Votre email</label>
+                    <input type="email" id="f-email" placeholder="votre@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Objet</label>
+                    <input type="text" id="f-objet" placeholder="Opportunité d'alternance, question...">
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea id="f-message" placeholder="Votre message..."></textarea>
+                </div>
+                <button class="form-submit" onclick="sendMail()">
+                    <i class="fas fa-paper-plane"></i> Envoyer le message
+                </button>
+            </div>
+        </div>
+    </div>
 
 </div><!-- fin content -->
 
 <script>
+    /* ===== NAVIGATION + TRANSITION ===== */
     function show(id, btn) {
-        // Cacher tous les panneaux
         var panels = document.querySelectorAll('.panel');
-        for (var i = 0; i < panels.length; i++) { panels[i].classList.remove('show'); }
-
-        // Désactiver tous les boutons
+        for (var i = 0; i < panels.length; i++) {
+            panels[i].classList.remove('show', 'visible');
+        }
         var buttons = document.querySelectorAll('nav button');
         for (var j = 0; j < buttons.length; j++) { buttons[j].classList.remove('active'); }
 
-        // Afficher le bon panneau
-        document.getElementById(id).classList.add('show');
+        var target = document.getElementById(id);
+        target.classList.add('show');
         btn.classList.add('active');
 
-        // Remonter en haut du contenu avec animation fluide
+        // Déclencher la transition opacity après un tick
+        requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+                target.classList.add('visible');
+                // Re-observer les cartes du panneau visible
+                observeCards();
+            });
+        });
+
+        // Scroll fluide vers le haut du contenu
         var contentTop = document.getElementById('mainContent').getBoundingClientRect().top + window.pageYOffset - 100;
         smoothScrollTo(contentTop, 700);
     }
@@ -766,15 +1015,12 @@
     function smoothScrollTo(targetY, duration) {
         var startY = window.pageYOffset;
         var distance = targetY - startY;
-        // Ne remonter que si on est en dessous
         if (distance >= 0) return;
         var startTime = null;
-
         function step(currentTime) {
             if (!startTime) startTime = currentTime;
             var elapsed = currentTime - startTime;
             var progress = Math.min(elapsed / duration, 1);
-            // Easing : ease-in-out cubique
             var ease = progress < 0.5
                 ? 4 * progress * progress * progress
                 : 1 - Math.pow(-2 * progress + 2, 3) / 2;
@@ -782,6 +1028,84 @@
             if (elapsed < duration) requestAnimationFrame(step);
         }
         requestAnimationFrame(step);
+    }
+
+    /* ===== SCROLL PROGRESS BAR ===== */
+    window.addEventListener('scroll', function() {
+        var scrollTop = window.pageYOffset;
+        var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        document.getElementById('progress-bar').style.width = pct + '%';
+    });
+
+    /* ===== INTERSECTION OBSERVER — FADE IN UP ===== */
+    var observer;
+    function observeCards() {
+        if (observer) observer.disconnect();
+        observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08 });
+
+        // Observer uniquement dans le panneau actif
+        var activePanel = document.querySelector('.panel.show');
+        if (!activePanel) return;
+        var items = activePanel.querySelectorAll('.card, .travel-card, .travel-summary');
+        items.forEach(function(el) {
+            if (!el.classList.contains('revealed')) {
+                observer.observe(el);
+            }
+        });
+    }
+
+    // Initialisation au chargement
+    window.addEventListener('DOMContentLoaded', function() {
+        // Le premier panel est déjà show+visible, on observe ses cartes
+        observeCards();
+    });
+
+    /* ===== COPY TO CLIPBOARD ===== */
+    function copyToClipboard(text, el) {
+        navigator.clipboard.writeText(text).then(function() {
+            showToast('✅ Copié dans le presse-papier !');
+        }).catch(function() {
+            // Fallback
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('✅ Copié dans le presse-papier !');
+        });
+    }
+
+    function showToast(msg) {
+        var toast = document.getElementById('copyToast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(function() { toast.classList.remove('show'); }, 2200);
+    }
+
+    /* ===== FORMULAIRE — MAILTO ===== */
+    function sendMail() {
+        var email = document.getElementById('f-email').value.trim();
+        var objet = document.getElementById('f-objet').value.trim();
+        var msg   = document.getElementById('f-message').value.trim();
+        if (!email || !objet || !msg) {
+            showToast('⚠️ Merci de remplir tous les champs.');
+            return;
+        }
+        var mailto = 'mailto:evandufour13@icloud.com'
+            + '?subject=' + encodeURIComponent(objet)
+            + '&body=' + encodeURIComponent('De : ' + email + '\n\n' + msg);
+        window.location.href = mailto;
     }
 </script>
 
