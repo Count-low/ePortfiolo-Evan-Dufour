@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <style>
+        /* RESET ET BASE */
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
@@ -17,7 +18,7 @@
             padding-bottom: 80px;
         }
 
-        /* ===== HEADER — fond gris foncé au lieu de noir ===== */
+        /* HEADER SECTION */
         header {
             background: #2c2c2e;
             color: white;
@@ -25,6 +26,7 @@
             display: flex;
             justify-content: center;
         }
+
         .header-inner {
             max-width: 1000px;
             width: 100%;
@@ -34,6 +36,8 @@
             flex-wrap: wrap;
             justify-content: center;
         }
+
+        /* STYLE DE TA PHOTO */
         .header-inner img {
             width: 300px;
             height: 380px;
@@ -41,8 +45,12 @@
             object-position: top;
             border-radius: 24px;
             border: 1px solid rgba(255,255,255,0.12);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
+
+        /* TEXTE DU HEADER */
         .header-text { max-width: 460px; }
+
         .header-text small {
             display: block;
             font-size: 0.78rem;
@@ -52,6 +60,7 @@
             color: #93c5fd;
             margin-bottom: 14px;
         }
+
         .header-text h1 {
             font-family: 'Poppins', sans-serif;
             font-size: clamp(2.4rem, 5vw, 3.8rem);
@@ -59,13 +68,17 @@
             line-height: 1.05;
             margin-bottom: 12px;
         }
+
         .header-text p {
             font-size: 1.1rem;
-            color: rgba(255,255,255,0.55);
+            color: rgba(255,255,255,0.7);
             font-weight: 300;
             margin-bottom: 36px;
         }
+
+        /* BOUTONS */
         .btns { display: flex; gap: 14px; flex-wrap: wrap; }
+
         .btn {
             padding: 13px 26px;
             border-radius: 50px;
@@ -75,11 +88,54 @@
             display: inline-flex;
             align-items: center;
             gap: 9px;
-            transition: opacity .2s, transform .2s;
+            transition: all .2s ease;
         }
-        .btn-cv  { background: #0071e3; color: white; }
-        .btn-li  { background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.22); }
-        .btn:hover { opacity: 0.85; transform: translateY(-2px); }
+
+        .btn-cv { background: #0071e3; color: white; }
+        .btn-li { 
+            background: rgba(255,255,255,0.1); 
+            color: white; 
+            border: 1px solid rgba(255,255,255,0.2); 
+        }
+
+        .btn:hover { 
+            opacity: 0.9; 
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header-inner { gap: 30px; text-align: center; }
+            .btns { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-inner">
+            <img src="PP.jfif" alt="Evan Dufour">
+
+            <div class="header-text">
+                <small>Stagiaire Mesures Physiques | JVcoating</small>
+                <h1>Evan Dufour</h1>
+                <p>Spécialiste en Contrôle Non Destructif (CND) et optimisation des procédés industriels au sein du groupe BT2I.</p>
+                
+                <div class="btns">
+                    <a href="#" class="btn btn-cv">
+                        <i class="fas fa-file-download"></i> Mon CV
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" class="btn btn-li">
+                        <i class="fab fa-linkedin"></i> LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    </body>
+</html>
 
         /* ===== NAVIGATION ===== */
         .nav-wrap {
