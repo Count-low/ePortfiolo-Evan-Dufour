@@ -970,23 +970,25 @@
 
             <!-- Formulaire -->
             <div class="contact-form-card">
-                <h3>✉️ Envoyer un message</h3>
-                <div class="form-group">
-                    <label>Votre email</label>
-                    <input type="email" id="f-email" placeholder="votre@email.com">
-                </div>
-                <div class="form-group">
-                    <label>Objet</label>
-                    <input type="text" id="f-objet" placeholder="Opportunité d'alternance, question...">
-                </div>
-                <div class="form-group">
-                    <label>Message</label>
-                    <textarea id="f-message" placeholder="Votre message..."></textarea>
-                </div>
-                <button class="form-submit" onclick="sendMail()">
-                    <i class="fas fa-paper-plane"></i> Envoyer le message
-                </button>
-            </div>
+    <h3>✉️ Envoyer un message</h3>
+    <form id="contact-form">
+        <div class="form-group">
+            <label>Votre email</label>
+            <input type="email" name="user_email" id="f-email" placeholder="votre@email.com" required>
+        </div>
+        <div class="form-group">
+            <label>Objet</label>
+            <input type="text" name="subject" id="f-objet" placeholder="Opportunité d'alternance, question..." required>
+        </div>
+        <div class="form-group">
+            <label>Message</label>
+            <textarea name="message" id="f-message" placeholder="Votre message..." required></textarea>
+        </div>
+        <button type="submit" class="form-submit">
+            <i class="fas fa-paper-plane"></i> Envoyer le message
+        </button>
+    </form>
+</div>
         </div>
     </div>
 
@@ -1115,6 +1117,30 @@
             + '&body=' + encodeURIComponent('De : ' + email + '\n\n' + msg);
         window.location.href = mailto;
     }
+</script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script type="text/javascript">
+   (function(){
+      // Remplace "TON_PUBLIC_KEY" par la clé que tu auras sur emailjs.com
+      emailjs.init("TON_PUBLIC_KEY");
+   })();
+
+   document.getElementById('contact-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const btn = event.target.querySelector('button');
+      btn.innerHTML = "Envoi en cours...";
+
+      emailjs.sendForm('TON_SERVICE_ID', 'TON_TEMPLATE_ID', this)
+         .then(function() {
+            showToast('✅ Message envoyé avec succès !');
+            document.getElementById('contact-form').reset();
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Envoyer le message';
+         }, function(error) {
+            showToast('❌ Erreur lors de l\'envoi...');
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Réessayer';
+         });
+   });
 </script>
 
 </body>
